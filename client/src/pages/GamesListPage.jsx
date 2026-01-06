@@ -49,7 +49,7 @@ function GamesListPage() {
   return (
     <div className="games-list-page">
       <div className="page-header">
-        <h1>Your Chess Games</h1>
+        <h1>My Chess Games</h1>
         <Link to="/games/new" className="btn btn-primary">
           Upload New Game
         </Link>

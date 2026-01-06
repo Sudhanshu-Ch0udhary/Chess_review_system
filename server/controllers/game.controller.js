@@ -3,17 +3,16 @@ import { extractPGNTags, extractMovesFromPGN, generatePGNHash } from '../utils/p
 
 export const newGameController = async (req, res) => {
   try {
-    const { pgn, event, white, black, date, result } = req.body;
+    const { pgn, event, white, black, date, result } = req.body
 
     if (!pgn) {
-      return res.status(400).json({ error: 'PGN is required' });
+      return res.status(400).json({ error: 'PGN is required' })
     }
 
     // Generate hash for duplicate detection
-    const pgnHash = generatePGNHash(pgn);
+    const pgnHash = generatePGNHash(pgn)
 
-    // Check if a game with this PGN hash already exists
-    const existingGame = await Game.findOne({ pgnHash });
+    const existingGame = await Game.findOne({ pgnHash })
     if (existingGame) {
       return res.status(409).json({
         error: 'This game has already been saved',
@@ -26,14 +25,11 @@ export const newGameController = async (req, res) => {
           result: existingGame.result,
           createdAt: existingGame.createdAt
         }
-      });
+      })
     }
 
-    // Extract tags from PGN if not provided in request
-    const pgnTags = extractPGNTags(pgn);
-
-    // Extract moves from PGN
-    const moves = extractMovesFromPGN(pgn);
+    const pgnTags = extractPGNTags(pgn)
+    const moves = extractMovesFromPGN(pgn)
 
     const game = new Game({
       pgn,
@@ -44,31 +40,31 @@ export const newGameController = async (req, res) => {
       black: black || pgnTags.black || 'Unknown',
       date: date || pgnTags.date || new Date().toISOString().split('T')[0],
       result: result || pgnTags.result || '*'
-    });
+    })
 
-    const savedGame = await game.save();
-    res.status(201).json(savedGame);
+    const savedGame = await game.save()
+    res.status(201).json(savedGame)
   } catch (error) {
     console.error('Error creating game:', error);
-    res.status(500).json({ error: 'Failed to create game' });
+    res.status(500).json({ error: 'Failed to create game' })
   }
 }
 
 export const getGamebyId = async (req, res) => {
   try {
-    const game = await Game.findById(req.params.id);
+    const game = await Game.findById(req.params.id)
 
     if (!game) {
-      return res.status(404).json({ error: 'Game not found' });
+      return res.status(404).json({ error: 'Game not found' })
     }
 
-    res.json(game);
+    res.json(game)
   } catch (error) {
-    console.error('Error fetching game:', error);
+    console.error('Error fetching game:', error)
     if (error.name === 'CastError') {
-      return res.status(400).json({ error: 'Invalid game ID' });
+      return res.status(400).json({ error: 'Invalid game ID' })
     }
-    res.status(500).json({ error: 'Failed to fetch game' });
+    res.status(500).json({ error: 'Failed to fetch game' })
   }
 }
 
@@ -76,11 +72,13 @@ export const getAllGames = async (req, res) => {
   try {
     const games = await Game.find({})
       .select('event white black date result createdAt')
-      .sort({ createdAt: -1 }); // Most recent first
+      .sort({ createdAt: -1 })
 
-    res.json(games);
+    res.json(games)
   } catch (error) {
-    console.error('Error fetching games:', error);
-    res.status(500).json({ error: 'Failed to fetch games' });
+    console.error('Error fetching games:', error)
+    res.status(500).json({ error: 'Failed to fetch games' })
   }
 }
+
+

@@ -1,70 +1,67 @@
 .games-list-page {
   padding: 2rem;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0;
+  /* Remove auto margin to align left? User asked cards to left. */
+  /* Actually, user said "cards to left as well". Standard max-width center is usually preferred but "cards to left" implies grid start. */
+  margin-left: 2rem;
+  /* Give some spacing but align left */
+  margin-right: auto;
+  width: 100%;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  /* Align top */
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #404040;
 }
 
 .page-header h1 {
   margin: 0;
-  color: #333;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 3rem;
-  background: #f9f9f9;
-  border-radius: 8px;
-  margin-top: 2rem;
-}
-
-.empty-state h2 {
-  color: #666;
-  margin-bottom: 1rem;
-}
-
-.empty-state p {
-  color: #888;
-  margin-bottom: 2rem;
+  color: #e5e5e5;
+  text-align: left;
+  /* Explicit left */
 }
 
 .games-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* Slightly smaller cards for better packing */
   gap: 1.5rem;
   margin-top: 2rem;
+  justify-content: start;
+  /* Align grid items to start (left) */
 }
 
 .game-card {
   display: block;
   background: white;
+  /* Explicit white card */
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 1.5rem;
   text-decoration: none;
-  color: inherit;
+  color: #333;
+  /* Explicit dark text inside card */
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .game-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-color: #007bff;
 }
 
 .game-card-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+  /* Better alignment */
   margin-bottom: 1rem;
 }
 
@@ -72,6 +69,7 @@
   margin: 0;
   font-size: 1.1rem;
   color: #333;
+  /* Dark header inside card */
   flex: 1;
 }
 
@@ -104,9 +102,18 @@
   min-width: 60px;
 }
 
-.player-name {
-  color: #333;
+/* Specific fix for player names on the white card */
+.game-card .player-name {
+  color: #333 !important;
+  /* Force dark text */
   flex: 1;
+  background: transparent !important;
+  /* Remove any inherited dark background */
+  padding: 0;
+  /* Remove inherited padding if any */
+  border: none !important;
+  /* Remove inherited borders */
+  box-shadow: none !important;
 }
 
 .game-meta {

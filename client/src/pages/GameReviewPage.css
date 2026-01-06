@@ -1,78 +1,117 @@
+/* Main Dashboard Layout */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap');
+
 .game-review-page {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  position: fixed;
+  /* Overlay everything */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: #161512;
+  color: #bababa;
 }
 
-.game-review-page h1 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: #333;
+.game-review-header {
+  height: 70px;
+  flex-shrink: 0;
+  /* Don't shrink header */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1f1e1b;
+  border-bottom: 1px solid #302e2b;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  z-index: 20;
+}
+
+.game-review-header h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+  color: #d1b378;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .game-layout {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
-  margin-top: 2rem;
+  display: flex;
+  flex: 1;
+  overflow: hidden;
 }
 
+/* Main Board Area */
 .game-main {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-}
-
-.game-sidebar {
-  display: flex;
-  flex-direction: column;
-}
-
-.game-metadata {
-  background-color: #f5f5f5;
-  padding: 1.5rem;
-  border-radius: 8px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-}
-
-.metadata-item {
-  font-size: 1rem;
-  color: #333;
-}
-
-.metadata-item strong {
-  color: #555;
-  margin-right: 0.5rem;
-}
-
-.board-placeholder {
-  margin-top: 1rem;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #161512;
 }
 
 .board-container {
-  border: 2px dashed #ddd;
+  width: 100%;
+  max-width: 85vh;
+  aspect-ratio: 1;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  justify-content: center;
+}
+
+/* Minimal Header Info above Board */
+.board-header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  color: #999;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.players {
+  color: #e5e5e5;
+  font-size: 1.1rem;
+}
+
+.result {
+  background-color: #262421;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* Sidebar */
+.game-sidebar {
+  width: 350px;
+  min-width: 300px;
+  background-color: #211f1d;
+  border-left: 1px solid #302e2b;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  margin-right: 60px;
+  /* Keeping the large right margin as requested earlier */
+  margin-top: 20px;
+  margin-bottom: 20px;
   border-radius: 8px;
-  padding: 2rem;
-  text-align: center;
-  background-color: #fafafa;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.board-container h3 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  color: #666;
-  font-size: 1.2rem;
-}
-
-.board-visualization {
-  color: #888;
-  font-style: italic;
-}
-
-.board-visualization p {
-  margin: 0.5rem 0;
+/* Ensure chessboard wrapper fills container */
+.chessboard-wrapper {
+  flex: 1;
+  width: 100%;
+  z-index: 1;
 }
 
 .error-message {
@@ -84,3 +123,7 @@
   margin-top: 1rem;
 }
 
+/* Critical Fix: Force Chessground background to match container exactly */
+.cg-board {
+  background-size: 100% 100% !important;
+}
