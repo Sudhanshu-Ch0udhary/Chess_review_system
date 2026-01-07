@@ -37,8 +37,20 @@
   cursor: pointer;
   padding: 4px 10px;
   font-size: 1.1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
   border-radius: 3px;
-  transition: background 0.1s;
+}
+
+.move-button.has-annotation {
+  border-left: 3px solid #4a90e2;
+}
+
+.move-symbol {
+  margin-left: 4px;
+  font-weight: bold;
+  font-size: 12px;
 }
 
 .nav-button:hover:not(:disabled) {

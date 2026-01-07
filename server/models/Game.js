@@ -35,6 +35,26 @@ const gameSchema = new mongoose.Schema({
     type: [String],
     default: []
   },
+  annotations: [{
+    moveIndex: {
+      type: Number,
+      required: true
+    },
+    comment: {
+      type: String,
+      default: ''
+    },
+    symbols: {
+      type: [String],
+      enum: ['!', '!!', '?', '??', '!?', '?!'],
+      default: []
+    },
+    source: {
+      type: String,
+      enum: ['manual', 'engine'],
+      default: 'manual'
+    }
+  }],
   createdAt: {
     type: Date,
     default: Date.now

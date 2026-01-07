@@ -24,7 +24,7 @@ mongoose.connect(mongodb_uri)
 
 app.use('/api/games', gamesRouter);
 app.get('/api/health', (_req, res) => {
-  res.status(200).json({ 
+  res.status(200).json({
     status: 'ok',
     message: 'Chess Review System API is running',
     timestamp: new Date().toISOString()

@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getGamebyId, newGameController, getAllGames } from '../controllers/game.controller.js'
+import { getGamebyId, newGameController, getAllGames, updateAnnotation } from '../controllers/game.controller.js'
 
 const router = Router()
 
@@ -11,5 +11,9 @@ router.post('/', newGameController)
 
 // Get a single game by ID
 router.get('/:id', getGamebyId)
+
+// Update annotation for a specific move
+router.patch('/:id/annotations/:moveIndex', updateAnnotation)
+
 
 export default router

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import './MoveList.css';
 
-function MoveList({ moves, currentMoveIndex, onMoveSelect }) {
+function MoveList({ moves, currentMoveIndex, onMoveSelect, annotations = [] }) {
   const [formattedMoves, setFormattedMoves] = useState([]);
   const moveRefs = useRef([]);
 
@@ -73,7 +73,14 @@ function MoveList({ moves, currentMoveIndex, onMoveSelect }) {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [moves, currentMoveIndex]); // Re-add listeners when moves or currentMoveIndex changes
+  }, [moves, currentMoveIndex, annotations]); // Re-add listeners when moves or currentMoveIndex changes
+
+  // Helper function to get annotation for a move
+  const getAnnotationForMove = (moveIndex) => {
+    return annotations.find(
+      ann => ann.moveIndex === moveIndex && ann.source === 'manual'
+    );
+  };
 
   const handleMoveClick = (moveIndex) => {
     if (onMoveSelect) {
@@ -151,18 +158,26 @@ function MoveList({ moves, currentMoveIndex, onMoveSelect }) {
             <span className="move-number">{movePair.moveNumber}.</span>
             <button
               ref={el => moveRefs.current[movePair.whiteIndex] = el}
-              className={`move-button ${movePair.whiteIndex === currentMoveIndex ? 'selected' : ''}`}
+              className={`move-button ${movePair.whiteIndex === currentMoveIndex ? 'selected' : ''} ${getAnnotationForMove(movePair.whiteIndex) ? 'has-annotation' : ''
+                }`}
               onClick={() => handleMoveClick(movePair.whiteIndex)}
             >
               {movePair.white}
+              {getAnnotationForMove(movePair.whiteIndex)?.symbols?.map((symbol, idx) => (
+                <span key={idx} className="move-symbol">{symbol}</span>
+              ))}
             </button>
             {movePair.black && (
               <button
                 ref={el => moveRefs.current[movePair.blackIndex] = el}
-                className={`move-button ${movePair.blackIndex === currentMoveIndex ? 'selected' : ''}`}
+                className={`move-button ${movePair.blackIndex === currentMoveIndex ? 'selected' : ''} ${getAnnotationForMove(movePair.blackIndex) ? 'has-annotation' : ''
+                  }`}
                 onClick={() => handleMoveClick(movePair.blackIndex)}
               >
                 {movePair.black}
+                {getAnnotationForMove(movePair.blackIndex)?.symbols?.map((symbol, idx) => (
+                  <span key={idx} className="move-symbol">{symbol}</span>
+                ))}
               </button>
             )}
           </div>

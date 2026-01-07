@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import MoveList from '../components/MoveList'
 import ChessboardView from '../components/ChessboardView'
+import AnnotationPanel from '../components/AnnotationPanel'
 import './GameReviewPage.css'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -15,6 +16,39 @@ function GameReviewPage() {
 
   const handleMoveSelect = (moveIndex) => {
     setCurrentMoveIndex(moveIndex)
+  }
+
+  const handleAnnotationUpdate = (updatedAnnotation) => {
+    // Update the game state with the new annotation
+    setGame(prevGame => {
+      const newAnnotations = [...(prevGame.annotations || [])]
+      const existingIndex = newAnnotations.findIndex(
+        ann => ann.moveIndex === currentMoveIndex && ann.source === 'manual'
+      )
+
+      if (updatedAnnotation) {
+        if (existingIndex !== -1) {
+          newAnnotations[existingIndex] = updatedAnnotation
+        } else {
+          newAnnotations.push(updatedAnnotation)
+        }
+      } else {
+        // Remove annotation if it was deleted
+        if (existingIndex !== -1) {
+          newAnnotations.splice(existingIndex, 1)
+        }
+      }
+
+      return { ...prevGame, annotations: newAnnotations }
+    })
+  }
+
+  // Get current move's annotation
+  const getCurrentAnnotation = () => {
+    if (!game || !game.annotations) return null
+    return game.annotations.find(
+      ann => ann.moveIndex === currentMoveIndex && ann.source === 'manual'
+    )
   }
 
   useEffect(() => {
@@ -85,6 +119,13 @@ function GameReviewPage() {
             moves={game.moves}
             currentMoveIndex={currentMoveIndex}
             onMoveSelect={handleMoveSelect}
+            annotations={game.annotations || []}
+          />
+          <AnnotationPanel
+            gameId={game._id}
+            currentMoveIndex={currentMoveIndex}
+            annotation={getCurrentAnnotation()}
+            onAnnotationUpdate={handleAnnotationUpdate}
           />
         </div>
       </div>

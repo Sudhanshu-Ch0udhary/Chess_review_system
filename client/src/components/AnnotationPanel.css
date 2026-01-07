@@ -1,0 +1,193 @@
+.annotation-panel {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.annotation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.annotation-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.edit-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.edit-button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Edit Mode */
+.annotation-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.symbols-section label,
+.comment-section label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.symbol-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.symbol-button {
+  padding: 8px 12px;
+  border: 2px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.symbol-button:hover {
+  border-color: #999;
+  background-color: #f9f9f9;
+}
+
+.symbol-button.active {
+  border-color: #4a90e2;
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.annotation-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.annotation-textarea:focus {
+  outline: none;
+  border-color: #4a90e2;
+}
+
+.annotation-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.save-button,
+.cancel-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.save-button {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.save-button:hover {
+  background-color: #357abd;
+}
+
+.cancel-button {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.cancel-button:hover {
+  background-color: #d0d0d0;
+}
+
+/* Display Mode */
+.annotation-display {
+  min-height: 60px;
+}
+
+.symbols-display {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.symbol {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Color-coded symbols */
+.symbol-exclamation,
+.symbol-exclamationexclamation {
+  background-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.symbol-question,
+.symbol-questionquestion {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
+
+.symbol-exclamationquestion,
+.symbol-questionexclamation {
+  background-color: #fff9c4;
+  color: #f57f17;
+}
+
+.comment-display {
+  background-color: #f9f9f9;
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 3px solid #4a90e2;
+}
+
+.comment-display p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  white-space: pre-wrap;
+}
+
+.no-annotation {
+  color: #999;
+  font-size: 14px;
+  font-style: italic;
+  margin: 0;
+  text-align: center;
+  padding: 20px 0;
+}
