@@ -55,6 +55,12 @@ const gameSchema = new mongoose.Schema({
       default: 'manual'
     }
   }],
+  ownerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    index: true
+  },
   createdAt: {
     type: Date,
     default: Date.now

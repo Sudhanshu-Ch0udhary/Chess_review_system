@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import './NewGamePage.css'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -9,6 +10,7 @@ function NewGamePage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const navigate = useNavigate()
+  const { getAuthHeaders } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -20,19 +22,24 @@ function NewGamePage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...getAuthHeaders(),
         },
         body: JSON.stringify({ pgn }),
       })
 
+      if (response.status === 401) {
+        window.location.href = '/login'
+        return
+      }
+
       if (response.status === 409) {
-        // Game already exists - redirect to existing game
         const errorData = await response.json()
         navigate(`/games/${errorData.existingGame.id}`)
         return
       }
 
       if (!response.ok) {
-        const errorData = await response.json()
+        const errorData = await response.json().catch(() => ({}))
         throw new Error(errorData.error || 'Failed to create game')
       }
 

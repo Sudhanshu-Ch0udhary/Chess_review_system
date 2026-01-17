@@ -3,6 +3,7 @@ import cors from 'cors'
 import { configDotenv } from 'dotenv'
 import mongoose from 'mongoose'
 import gamesRouter from './routes/games.js'
+import authRouter from './routes/auth.js'
 
 configDotenv()
 
@@ -22,6 +23,7 @@ mongoose.connect(mongodb_uri)
     console.error('MongoDB connection error:', err);
   })
 
+app.use('/api/auth', authRouter);
 app.use('/api/games', gamesRouter);
 app.get('/api/health', (_req, res) => {
   res.status(200).json({

@@ -9,10 +9,13 @@ export const newGameController = async (req, res) => {
       return res.status(400).json({ error: 'PGN is required' })
     }
 
-    // Generate hash for duplicate detection
+    if (!req.userId) {
+      return res.status(401).json({ error: 'Authentication required' })
+    }
+
     const pgnHash = generatePGNHash(pgn)
 
-    const existingGame = await Game.findOne({ pgnHash })
+    const existingGame = await Game.findOne({ pgnHash, ownerId: req.userId })
     if (existingGame) {
       return res.status(409).json({
         error: 'This game has already been saved',
@@ -39,7 +42,8 @@ export const newGameController = async (req, res) => {
       white: white || pgnTags.white || 'Unknown',
       black: black || pgnTags.black || 'Unknown',
       date: date || pgnTags.date || new Date().toISOString().split('T')[0],
-      result: result || pgnTags.result || '*'
+      result: result || pgnTags.result || '*',
+      ownerId: req.userId
     })
 
     const savedGame = await game.save()
@@ -52,7 +56,11 @@ export const newGameController = async (req, res) => {
 
 export const getGamebyId = async (req, res) => {
   try {
-    const game = await Game.findById(req.params.id)
+    if (!req.userId) {
+      return res.status(401).json({ error: 'Authentication required' })
+    }
+
+    const game = await Game.findOne({ _id: req.params.id, ownerId: req.userId })
 
     if (!game) {
       return res.status(404).json({ error: 'Game not found' })
@@ -70,7 +78,11 @@ export const getGamebyId = async (req, res) => {
 
 export const getAllGames = async (req, res) => {
   try {
-    const games = await Game.find({})
+    if (!req.userId) {
+      return res.status(401).json({ error: 'Authentication required' })
+    }
+
+    const games = await Game.find({ ownerId: req.userId })
       .select('event white black date result createdAt')
       .sort({ createdAt: -1 })
 
@@ -86,7 +98,11 @@ export const updateAnnotation = async (req, res) => {
     const { id, moveIndex } = req.params
     const { comment, symbols } = req.body
 
-    const game = await Game.findById(id)
+    if (!req.userId) {
+      return res.status(401).json({ error: 'Authentication required' })
+    }
+
+    const game = await Game.findOne({ _id: id, ownerId: req.userId })
 
     if (!game) {
       return res.status(404).json({ error: 'Game not found' })

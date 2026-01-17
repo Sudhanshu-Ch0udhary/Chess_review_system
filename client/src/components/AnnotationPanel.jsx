@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 import './AnnotationPanel.css';
 
 const CHESS_SYMBOLS = ['!', '!!', '?', '??', '!?', '?!'];
@@ -7,8 +8,9 @@ function AnnotationPanel({ gameId, currentMoveIndex, annotation, onAnnotationUpd
   const [isEditing, setIsEditing] = useState(false);
   const [comment, setComment] = useState('');
   const [symbols, setSymbols] = useState([]);
+  const { getAuthHeaders } = useAuth();
 
-  // Update local state when annotation changes
+  
   useEffect(() => {
     if (annotation) {
       setComment(annotation.comment || '');
@@ -39,6 +41,7 @@ function AnnotationPanel({ gameId, currentMoveIndex, annotation, onAnnotationUpd
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            ...getAuthHeaders(),
           },
           body: JSON.stringify({ comment, symbols }),
         }

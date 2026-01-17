@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import './GamesListPage.css'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -8,14 +9,23 @@ function GamesListPage() {
   const [games, setGames] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const { getAuthHeaders } = useAuth()
 
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/games`)
+        const response = await fetch(`${API_URL}/api/games`, {
+          headers: getAuthHeaders()
+        })
+
+        if (response.status === 401) {
+          window.location.href = '/login'
+          return
+        }
 
         if (!response.ok) {
-          throw new Error('Failed to fetch games')
+          const errorData = await response.json().catch(() => ({}))
+          throw new Error(errorData.error || 'Failed to fetch games')
         }
 
         const gamesData = await response.json()
@@ -28,7 +38,7 @@ function GamesListPage() {
     }
 
     fetchGames()
-  }, [])
+  }, [getAuthHeaders])
 
   if (loading) {
     return (
