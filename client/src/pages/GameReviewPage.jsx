@@ -14,6 +14,7 @@ function GameReviewPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0)
+  const [analyzing, setAnalyzing] = useState(false)
   const { getAuthHeaders } = useAuth()
 
   const handleMoveSelect = (moveIndex) => {
@@ -51,6 +52,41 @@ function GameReviewPage() {
     return game.annotations.find(
       ann => ann.moveIndex === currentMoveIndex && ann.source === 'manual'
     )
+  }
+
+  // Get current move's engine analysis
+  const getCurrentEngineAnalysis = () => {
+    if (!game || !game.engineAnalysis) return null
+    return game.engineAnalysis.find(
+      analysis => analysis.moveIndex === currentMoveIndex
+    )
+  }
+
+  // Handle running engine analysis
+  const handleRunAnalysis = async () => {
+    if (!game || analyzing) return
+
+    setAnalyzing(true)
+    setError('')
+
+    try {
+      const response = await fetch(`${API_URL}/api/games/${id}/analyze`, {
+        method: 'POST',
+        headers: getAuthHeaders()
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || 'Failed to analyze game')
+      }
+
+      const result = await response.json()
+      setGame(result.game)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setAnalyzing(false)
+    }
   }
 
   useEffect(() => {
@@ -112,6 +148,20 @@ function GameReviewPage() {
     <div className="game-review-page">
       <div className="game-review-header">
         <h1>Game Review</h1>
+        <div className="game-actions">
+          {!game.hasEngineAnalysis && (
+            <button
+              className="analyze-button"
+              onClick={handleRunAnalysis}
+              disabled={analyzing || !game || !game.moves || game.moves.length === 0}
+            >
+              {analyzing ? 'Analyzing...' : 'Run Engine Analysis'}
+            </button>
+          )}
+          {game.hasEngineAnalysis && (
+            <span className="analysis-badge">✓ Analyzed</span>
+          )}
+        </div>
       </div>
 
       <div className="game-layout">
@@ -130,11 +180,13 @@ function GameReviewPage() {
             currentMoveIndex={currentMoveIndex}
             onMoveSelect={handleMoveSelect}
             annotations={game.annotations || []}
+            engineAnalysis={game.engineAnalysis || []}
           />
           <AnnotationPanel
             gameId={game._id}
             currentMoveIndex={currentMoveIndex}
             annotation={getCurrentAnnotation()}
+            engineAnalysis={getCurrentEngineAnalysis()}
             onAnnotationUpdate={handleAnnotationUpdate}
           />
         </div>

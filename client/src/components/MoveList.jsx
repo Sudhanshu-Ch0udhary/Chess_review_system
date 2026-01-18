@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import './MoveList.css';
 
-function MoveList({ moves, currentMoveIndex, onMoveSelect, annotations = [] }) {
+function MoveList({ moves, currentMoveIndex, onMoveSelect, annotations = [], engineAnalysis = [] }) {
   const [formattedMoves, setFormattedMoves] = useState([]);
   const moveRefs = useRef([]);
 
@@ -82,6 +82,31 @@ function MoveList({ moves, currentMoveIndex, onMoveSelect, annotations = [] }) {
     );
   };
 
+  // Helper function to get engine analysis for a move
+  const getEngineAnalysisForMove = (moveIndex) => {
+    return engineAnalysis.find(
+      analysis => analysis.moveIndex === moveIndex
+    );
+  };
+
+  // Get severity class for styling
+  const getSeverityClass = (severity) => {
+    switch (severity) {
+      case 'blunder':
+        return 'severity-blunder';
+      case 'mistake':
+        return 'severity-mistake';
+      case 'inaccuracy':
+        return 'severity-inaccuracy';
+      case 'good':
+        return 'severity-good';
+      case 'best':
+        return 'severity-best';
+      default:
+        return '';
+    }
+  };
+
   const handleMoveClick = (moveIndex) => {
     if (onMoveSelect) {
       onMoveSelect(moveIndex);
@@ -158,26 +183,32 @@ function MoveList({ moves, currentMoveIndex, onMoveSelect, annotations = [] }) {
             <span className="move-number">{movePair.moveNumber}.</span>
             <button
               ref={el => moveRefs.current[movePair.whiteIndex] = el}
-              className={`move-button ${movePair.whiteIndex === currentMoveIndex ? 'selected' : ''} ${getAnnotationForMove(movePair.whiteIndex) ? 'has-annotation' : ''
-                }`}
+              className={`move-button ${movePair.whiteIndex === currentMoveIndex ? 'selected' : ''} ${getAnnotationForMove(movePair.whiteIndex) ? 'has-annotation' : ''} ${getEngineAnalysisForMove(movePair.whiteIndex) ? getSeverityClass(getEngineAnalysisForMove(movePair.whiteIndex).severity) : ''}`}
               onClick={() => handleMoveClick(movePair.whiteIndex)}
+              title={getEngineAnalysisForMove(movePair.whiteIndex) ? `Engine: ${getEngineAnalysisForMove(movePair.whiteIndex).severity} (Eval: ${getEngineAnalysisForMove(movePair.whiteIndex).evaluation.toFixed(2)})` : ''}
             >
               {movePair.white}
               {getAnnotationForMove(movePair.whiteIndex)?.symbols?.map((symbol, idx) => (
                 <span key={idx} className="move-symbol">{symbol}</span>
               ))}
+              {getEngineAnalysisForMove(movePair.whiteIndex) && (
+                <span className={`severity-indicator ${getSeverityClass(getEngineAnalysisForMove(movePair.whiteIndex).severity)}`}></span>
+              )}
             </button>
             {movePair.black && (
               <button
                 ref={el => moveRefs.current[movePair.blackIndex] = el}
-                className={`move-button ${movePair.blackIndex === currentMoveIndex ? 'selected' : ''} ${getAnnotationForMove(movePair.blackIndex) ? 'has-annotation' : ''
-                  }`}
+                className={`move-button ${movePair.blackIndex === currentMoveIndex ? 'selected' : ''} ${getAnnotationForMove(movePair.blackIndex) ? 'has-annotation' : ''} ${getEngineAnalysisForMove(movePair.blackIndex) ? getSeverityClass(getEngineAnalysisForMove(movePair.blackIndex).severity) : ''}`}
                 onClick={() => handleMoveClick(movePair.blackIndex)}
+                title={getEngineAnalysisForMove(movePair.blackIndex) ? `Engine: ${getEngineAnalysisForMove(movePair.blackIndex).severity} (Eval: ${getEngineAnalysisForMove(movePair.blackIndex).evaluation.toFixed(2)})` : ''}
               >
                 {movePair.black}
                 {getAnnotationForMove(movePair.blackIndex)?.symbols?.map((symbol, idx) => (
                   <span key={idx} className="move-symbol">{symbol}</span>
                 ))}
+                {getEngineAnalysisForMove(movePair.blackIndex) && (
+                  <span className={`severity-indicator ${getSeverityClass(getEngineAnalysisForMove(movePair.blackIndex).severity)}`}></span>
+                )}
               </button>
             )}
           </div>

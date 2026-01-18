@@ -12,10 +12,13 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "chess.js": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^8.7.0"
+    "mongoose": "^8.7.0",
+    "stockfish": "^17.1.0",
+    "stockfish.js": "^10.0.2"
   }
 }

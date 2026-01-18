@@ -191,3 +191,105 @@
   text-align: center;
   padding: 20px 0;
 }
+
+/* Engine Analysis Section */
+.engine-analysis-section {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #404040;
+}
+
+.engine-analysis-section h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #e5e5e5;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.engine-severity {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.engine-severity-blunder {
+  background-color: #dc3545;
+  color: white;
+}
+
+.engine-severity-mistake {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.engine-severity-inaccuracy {
+  background-color: #ffa500;
+  color: white;
+}
+
+.engine-severity-good {
+  background-color: #4ecdc4;
+  color: white;
+}
+
+.engine-severity-best {
+  background-color: #51cf66;
+  color: white;
+}
+
+.engine-severity-unknown {
+  background-color: #666;
+  color: white;
+}
+
+.engine-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.engine-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #404040;
+}
+
+.engine-detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 13px;
+  color: #999;
+  font-weight: 500;
+}
+
+.detail-value {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+.detail-value.positive {
+  color: #51cf66;
+}
+
+.detail-value.negative {
+  color: #ff6b6b;
+}
+
+.detail-value.best-move {
+  color: #4a90e2;
+  font-weight: 700;
+}

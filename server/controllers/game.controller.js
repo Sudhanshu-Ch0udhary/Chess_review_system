@@ -152,3 +152,78 @@ export const updateAnnotation = async (req, res) => {
   }
 }
 
+export const analyzeGame = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    if (!req.userId) {
+      return res.status(401).json({ error: 'Authentication required' })
+    }
+
+    const game = await Game.findOne({ _id: id, ownerId: req.userId })
+
+    if (!game) {
+      return res.status(404).json({ error: 'Game not found' })
+    }
+
+    if (!game.moves || game.moves.length === 0) {
+      return res.status(400).json({ error: 'Game has no moves to analyze' })
+    }
+
+    // Import engine service
+    const engineService = (await import('../services/engineService.js')).default
+
+    // Initialize engine if needed
+    await engineService.initialize()
+
+    // Analyze the game
+    const analyses = await engineService.analyzeGame(game.moves)
+
+    // Store engine analysis results
+    game.engineAnalysis = analyses.map(analysis => ({
+      moveIndex: analysis.moveIndex,
+      evaluation: analysis.evaluation,
+      bestMove: analysis.bestMove || '',
+      bestMoveUci: analysis.bestMoveUci || '',
+      evalDiff: analysis.evalDiff || 0,
+      severity: analysis.severity || 'unknown',
+      pv: analysis.pv || [],
+      analyzedAt: new Date()
+    }))
+
+    // Also create engine annotations for moves with mistakes
+    analyses.forEach(analysis => {
+      if (analysis.severity && analysis.severity !== 'best' && analysis.severity !== 'good') {
+        // Check if engine annotation already exists
+        const existingIndex = game.annotations.findIndex(
+          ann => ann.moveIndex === analysis.moveIndex && ann.source === 'engine'
+        )
+
+        const comment = `Engine: ${analysis.severity}. Best move: ${analysis.bestMove || 'N/A'}. Eval: ${analysis.evaluation.toFixed(2)}`
+
+        if (existingIndex !== -1) {
+          game.annotations[existingIndex].comment = comment
+        } else {
+          game.annotations.push({
+            moveIndex: analysis.moveIndex,
+            comment: comment,
+            symbols: [],
+            source: 'engine'
+          })
+        }
+      }
+    })
+
+    game.hasEngineAnalysis = true
+    await game.save()
+
+    res.json({
+      success: true,
+      game: game,
+      analysisCount: analyses.length
+    })
+  } catch (error) {
+    console.error('Error analyzing game:', error)
+    res.status(500).json({ error: 'Failed to analyze game: ' + error.message })
+  }
+}
