@@ -4,7 +4,7 @@ import './AnnotationPanel.css';
 
 const CHESS_SYMBOLS = ['!', '!!', '?', '??', '!?', '?!'];
 
-function AnnotationPanel({ gameId, currentMoveIndex, annotation, onAnnotationUpdate }) {
+function AnnotationPanel({ gameId, currentMoveIndex, annotation, engineAnalysis, onAnnotationUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
   const [comment, setComment] = useState('');
   const [symbols, setSymbols] = useState([]);
@@ -136,6 +136,36 @@ function AnnotationPanel({ gameId, currentMoveIndex, annotation, onAnnotationUpd
         </div>
       ) : (
         <div className="annotation-display">
+          {engineAnalysis && (
+            <div className="engine-analysis-section">
+              <h4>Engine Analysis</h4>
+              <div className={`engine-severity engine-severity-${engineAnalysis.severity}`}>
+                {engineAnalysis.severity?.toUpperCase()}
+              </div>
+              <div className="engine-details">
+                <div className="engine-detail-item">
+                  <span className="detail-label">Evaluation:</span>
+                  <span className={`detail-value ${engineAnalysis.evaluation >= 0 ? 'positive' : 'negative'}`}>
+                    {engineAnalysis.evaluation >= 0 ? '+' : ''}{Number(engineAnalysis.evaluation).toFixed(2)}
+                  </span>
+                </div>
+                {engineAnalysis.bestMove && (
+                  <div className="engine-detail-item">
+                    <span className="detail-label">Best move:</span>
+                    <span className="detail-value best-move">{engineAnalysis.bestMove}</span>
+                  </div>
+                )}
+                {engineAnalysis.evalDiff !== 0 && (
+                  <div className="engine-detail-item">
+                    <span className="detail-label">Eval change:</span>
+                    <span className={`detail-value ${engineAnalysis.evalDiff >= 0 ? 'positive' : 'negative'}`}>
+                      {engineAnalysis.evalDiff >= 0 ? '+' : ''}{Number(engineAnalysis.evalDiff).toFixed(2)}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
           {hasContent ? (
             <>
               {symbols.length > 0 && (
@@ -154,7 +184,7 @@ function AnnotationPanel({ gameId, currentMoveIndex, annotation, onAnnotationUpd
               )}
             </>
           ) : (
-            <p className="no-annotation">No annotation for this move. Click ✏️ to add one.</p>
+            !engineAnalysis && <p className="no-annotation">No annotation for this move. Click ✏️ to add one.</p>
           )}
         </div>
       )}

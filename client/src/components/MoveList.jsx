@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import './MoveList.css';
 
-function MoveList({ moves, currentMoveIndex, onMoveSelect, annotations = [] }) {
+function MoveList({ moves, currentMoveIndex, onMoveSelect, annotations = [], engineAnalysis = [] }) {
   const [formattedMoves, setFormattedMoves] = useState([]);
   const moveRefs = useRef([]);
 
@@ -75,12 +75,18 @@ function MoveList({ moves, currentMoveIndex, onMoveSelect, annotations = [] }) {
     };
   }, [moves, currentMoveIndex, annotations]); // Re-add listeners when moves or currentMoveIndex changes
 
-  // Helper function to get annotation for a move
   const getAnnotationForMove = (moveIndex) => {
-    return annotations.find(
-      ann => ann.moveIndex === moveIndex && ann.source === 'manual'
-    );
-  };
+    return annotations.find((ann) => ann.moveIndex === moveIndex && ann.source === 'manual')
+  }
+
+  const getEngineAnalysisForMove = (moveIndex) => {
+    return engineAnalysis.find((a) => a.moveIndex === moveIndex)
+  }
+
+  const getSeverityClass = (severity) => {
+    const map = { blunder: 'severity-blunder', mistake: 'severity-mistake', inaccuracy: 'severity-inaccuracy', good: 'severity-good', best: 'severity-best' }
+    return map[severity] || ''
+  }
 
   const handleMoveClick = (moveIndex) => {
     if (onMoveSelect) {
@@ -157,9 +163,8 @@ function MoveList({ moves, currentMoveIndex, onMoveSelect, annotations = [] }) {
           <div key={pairIndex} className="move-pair">
             <span className="move-number">{movePair.moveNumber}.</span>
             <button
-              ref={el => moveRefs.current[movePair.whiteIndex] = el}
-              className={`move-button ${movePair.whiteIndex === currentMoveIndex ? 'selected' : ''} ${getAnnotationForMove(movePair.whiteIndex) ? 'has-annotation' : ''
-                }`}
+              ref={(el) => (moveRefs.current[movePair.whiteIndex] = el)}
+              className={`move-button ${movePair.whiteIndex === currentMoveIndex ? 'selected' : ''} ${getAnnotationForMove(movePair.whiteIndex) ? 'has-annotation' : ''} ${getSeverityClass(getEngineAnalysisForMove(movePair.whiteIndex)?.severity) || ''}`}
               onClick={() => handleMoveClick(movePair.whiteIndex)}
             >
               {movePair.white}
@@ -169,9 +174,8 @@ function MoveList({ moves, currentMoveIndex, onMoveSelect, annotations = [] }) {
             </button>
             {movePair.black && (
               <button
-                ref={el => moveRefs.current[movePair.blackIndex] = el}
-                className={`move-button ${movePair.blackIndex === currentMoveIndex ? 'selected' : ''} ${getAnnotationForMove(movePair.blackIndex) ? 'has-annotation' : ''
-                  }`}
+                ref={(el) => (moveRefs.current[movePair.blackIndex] = el)}
+                className={`move-button ${movePair.blackIndex === currentMoveIndex ? 'selected' : ''} ${getAnnotationForMove(movePair.blackIndex) ? 'has-annotation' : ''} ${getSeverityClass(getEngineAnalysisForMove(movePair.blackIndex)?.severity) || ''}`}
                 onClick={() => handleMoveClick(movePair.blackIndex)}
               >
                 {movePair.black}

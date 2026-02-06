@@ -35,6 +35,15 @@ const gameSchema = new mongoose.Schema({
     type: [String],
     default: []
   },
+  engineAnalysis: [{
+    moveIndex: { type: Number, required: true },
+    evaluation: { type: Number, default: 0 },
+    bestMove: { type: String, default: '' },
+    evalDiff: { type: Number, default: 0 },
+    severity: { type: String, enum: ['best', 'good', 'inaccuracy', 'mistake', 'blunder', 'unknown'], default: 'unknown' },
+    pv: { type: [String], default: [] }
+  }],
+  hasEngineAnalysis: { type: Boolean, default: false },
   annotations: [{
     moveIndex: {
       type: Number,

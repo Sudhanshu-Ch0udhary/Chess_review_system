@@ -9,7 +9,7 @@ function GamesListPage() {
   const [games, setGames] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const { getAuthHeaders } = useAuth()
+  const { getAuthHeaders, logout } = useAuth()
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -19,6 +19,7 @@ function GamesListPage() {
         })
 
         if (response.status === 401) {
+          logout()
           window.location.href = '/login'
           return
         }

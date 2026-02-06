@@ -137,3 +137,9 @@
   font-style: italic;
   padding: 20px;
 }
+
+.move-button.severity-blunder { border-left: 3px solid #dc3545; }
+.move-button.severity-mistake { border-left: 3px solid #ff6b6b; }
+.move-button.severity-inaccuracy { border-left: 3px solid #ffa500; }
+.move-button.severity-good { border-left: 3px solid #4ecdc4; }
+.move-button.severity-best { border-left: 3px solid #51cf66; }

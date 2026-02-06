@@ -152,3 +152,42 @@ export const updateAnnotation = async (req, res) => {
   }
 }
 
+export const saveEngineAnalysis = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { engineAnalysis } = req.body
+
+    if (!req.userId) {
+      return res.status(401).json({ error: 'Authentication required' })
+    }
+
+    const game = await Game.findOne({ _id: id, ownerId: req.userId })
+    if (!game) {
+      return res.status(404).json({ error: 'Game not found' })
+    }
+
+    if (!Array.isArray(engineAnalysis)) {
+      return res.status(400).json({ error: 'engineAnalysis must be an array' })
+    }
+
+    game.engineAnalysis = engineAnalysis.map((a) => ({
+      moveIndex: a.moveIndex,
+      evaluation: a.evaluation ?? 0,
+      bestMove: a.bestMove ?? '',
+      evalDiff: a.evalDiff ?? 0,
+      severity: a.severity ?? 'unknown',
+      pv: a.pv ?? []
+    }))
+    game.hasEngineAnalysis = true
+    await game.save()
+
+    res.json(game)
+  } catch (error) {
+    console.error('Error saving engine analysis:', error)
+    if (error.name === 'CastError') {
+      return res.status(400).json({ error: 'Invalid game ID' })
+    }
+    res.status(500).json({ error: 'Failed to save engine analysis' })
+  }
+}
+

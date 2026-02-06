@@ -29,6 +29,11 @@
   z-index: 20;
 }
 
+.game-review-header {
+  justify-content: space-between;
+  padding: 0 24px;
+}
+
 .game-review-header h1 {
   font-family: 'Cinzel', serif;
   font-size: 1.8rem;
@@ -38,6 +43,42 @@
   text-transform: uppercase;
   letter-spacing: 2px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.game-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.analyze-button {
+  background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.analyze-button:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.analyze-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.analysis-badge {
+  background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .game-layout {

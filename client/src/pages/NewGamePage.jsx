@@ -10,7 +10,7 @@ function NewGamePage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const navigate = useNavigate()
-  const { getAuthHeaders } = useAuth()
+  const { getAuthHeaders, logout } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -28,6 +28,7 @@ function NewGamePage() {
       })
 
       if (response.status === 401) {
+        logout()
         window.location.href = '/login'
         return
       }

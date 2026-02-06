@@ -191,3 +191,47 @@
   text-align: center;
   padding: 20px 0;
 }
+
+.engine-analysis-section {
+  background: #1a1a1a;
+  color: #e5e5e5;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.engine-analysis-section h4 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #999;
+}
+
+.engine-severity {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.engine-severity-blunder { background: #dc3545; }
+.engine-severity-mistake { background: #ff6b6b; }
+.engine-severity-inaccuracy { background: #ffa500; }
+.engine-severity-good { background: #4ecdc4; }
+.engine-severity-best { background: #51cf66; }
+.engine-severity-unknown { background: #666; }
+
+.engine-details { display: flex; flex-direction: column; gap: 4px; }
+
+.engine-detail-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.detail-label { color: #999; }
+.detail-value.positive { color: #51cf66; }
+.detail-value.negative { color: #ff6b6b; }
+.detail-value.best-move { color: #4a90e2; }
