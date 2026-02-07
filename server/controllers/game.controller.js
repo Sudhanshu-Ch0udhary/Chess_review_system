@@ -43,7 +43,8 @@ export const newGameController = async (req, res) => {
       black: black || pgnTags.black || 'Unknown',
       date: date || pgnTags.date || new Date().toISOString().split('T')[0],
       result: result || pgnTags.result || '*',
-      ownerId: req.userId
+      ownerId: req.userId,
+      status: 'uploaded'
     })
 
     const savedGame = await game.save()
@@ -108,29 +109,24 @@ export const updateAnnotation = async (req, res) => {
       return res.status(404).json({ error: 'Game not found' })
     }
 
-    // Validate moveIndex
     const moveIdx = parseInt(moveIndex)
     if (isNaN(moveIdx) || moveIdx < 0 || moveIdx >= game.moves.length) {
       return res.status(400).json({ error: 'Invalid move index' })
     }
 
-    // Find existing annotation for this move
     const existingAnnotationIndex = game.annotations.findIndex(
       ann => ann.moveIndex === moveIdx && ann.source === 'manual'
     )
 
     if (existingAnnotationIndex !== -1) {
-      // Update existing annotation
       game.annotations[existingAnnotationIndex].comment = comment || ''
       game.annotations[existingAnnotationIndex].symbols = symbols || []
       
-      // Remove annotation if both comment and symbols are empty
       if (!game.annotations[existingAnnotationIndex].comment && 
           game.annotations[existingAnnotationIndex].symbols.length === 0) {
         game.annotations.splice(existingAnnotationIndex, 1)
       }
     } else {
-      // Create new annotation only if there's content
       if (comment || (symbols && symbols.length > 0)) {
         game.annotations.push({
           moveIndex: moveIdx,

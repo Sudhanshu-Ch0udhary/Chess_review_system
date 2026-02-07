@@ -4,6 +4,8 @@ import { configDotenv } from 'dotenv'
 import mongoose from 'mongoose'
 import gamesRouter from './routes/games.js'
 import authRouter from './routes/auth.js'
+import analysisRouter from './routes/analysis.js'
+import reviewRouter from './routes/review.js'
 
 configDotenv()
 
@@ -25,6 +27,9 @@ mongoose.connect(mongodb_uri)
 
 app.use('/api/auth', authRouter);
 app.use('/api/games', gamesRouter);
+app.use('/api/analysis', analysisRouter);
+app.use('/api/review', reviewRouter);
+
 app.get('/api/health', (_req, res) => {
   res.status(200).json({
     status: 'ok',
