@@ -48,3 +48,27 @@ export const generateReview = async (req, res) => {
     res.status(500).json({ error: "Failed to generate review" })
   }
 }
+
+export const getReviewByGame = async (req, res) => {
+  try {
+    const { gameId } = req.params;
+
+    if (!req.userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    const review = await Review.findOne({
+      gameId,
+      ownerId: req.userId
+    });
+
+    if (!review) {
+      return res.status(404).json({ error: "Review not found" });
+    }
+
+    res.json(review);
+  } catch (err) {
+    console.error("Fetch review error:", err);
+    res.status(500).json({ error: "Failed to fetch review" });
+  }
+}

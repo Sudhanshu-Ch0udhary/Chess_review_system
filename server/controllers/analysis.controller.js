@@ -42,3 +42,27 @@ export const saveAnalysis = async (req, res) => {
     res.status(500).json({ error: "Failed to save analysis" });
   }
 };
+
+export const getAnalysisByGame = async (req, res) => {
+  try {
+    const { gameId } = req.params;
+
+    if (!req.userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
+    const analysis = await Analysis.findOne({
+      gameId,
+      ownerId: req.userId
+    });
+
+    if (!analysis) {
+      return res.status(404).json({ error: "Analysis not found" });
+    }
+
+    res.json(analysis);
+  } catch (err) {
+    console.error("Fetch analysis error:", err);
+    res.status(500).json({ error: "Failed to fetch analysis" });
+  }
+}
